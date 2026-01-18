@@ -7,7 +7,7 @@
 在 [Ubuntu Server 24.04 LTS](https://ubuntu.com/download/raspberry-pi) 上运行以下命令，即可一键安装：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/luochang212/agent-server/main/agent-server-setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/luochang212/agent-server/main/svr-setup.sh | bash
 ```
 
 > 配合  系统使用最佳
