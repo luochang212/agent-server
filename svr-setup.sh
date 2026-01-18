@@ -18,6 +18,25 @@ echo "   Starting RPi Agent Server Setup"
 echo "=========================================="
 
 # 1. Environment Configuration
+# Check for active apt/dpkg processes
+LOCK_PID="$(pgrep -x "apt" -n 2>/dev/null || true)"
+if [ -z "$LOCK_PID" ]; then
+    LOCK_PID="$(pgrep -x "apt-get" -n 2>/dev/null || true)"
+fi
+if [ -z "$LOCK_PID" ]; then
+    LOCK_PID="$(pgrep -x "dpkg" -n 2>/dev/null || true)"
+fi
+if [ -z "$LOCK_PID" ]; then
+    LOCK_PID="$(pgrep -f "unattended-upgr" -n 2>/dev/null || true)"
+fi
+if [ -n "$LOCK_PID" ]; then
+    echo "Error: Unable to acquire dpkg lock. Another process (PID: $LOCK_PID) is holding it."
+    echo "To fix this, you can terminate the process using:"
+    echo "  sudo kill -9 $LOCK_PID"
+    echo "Tip: If this is unattended-upgr, waiting for it to finish is often safer than killing it."
+    exit 1
+fi
+
 echo "[1/7] Updating system packages..."
 sudo apt update
 sudo apt upgrade -y
